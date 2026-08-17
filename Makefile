@@ -1,5 +1,15 @@
-install:
-	cd backend && poetry install --no-root
+PYTHON = python
+POETRY = poetry
 
-run:
-	cd backend && poetry run uvicorn main:app --reload
+.PHONY: help install test
+
+help:
+	@echo "Comandos disponíveis:"
+	@echo "  make install  - Instala as dependências do projeto"
+	@echo "  make test     - Executa os testes"
+
+install:
+	$(POETRY) install
+
+test:
+	$(POETRY) run pytest
