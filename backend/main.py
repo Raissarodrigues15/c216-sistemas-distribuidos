@@ -7,7 +7,7 @@ app = FastAPI()
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://postgres:postgres@localhost:5432/c216",
+    "postgresql+psycopg://postgres:postgres@localhost:5432/c216",
 )
 
 engine = create_engine(DATABASE_URL)
