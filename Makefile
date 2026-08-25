@@ -1,5 +1,6 @@
 PYTHON = python
 POETRY = poetry
+BACKEND_DIR = backend
 
 .PHONY: help install test
 
@@ -9,7 +10,7 @@ help:
 	@echo "  make test     - Executa os testes"
 
 install:
-	$(POETRY) install
+	cd $(BACKEND_DIR) && $(POETRY) install
 
 test:
-	$(POETRY) run pytest
+	cd $(BACKEND_DIR) && $(POETRY) run pytest
