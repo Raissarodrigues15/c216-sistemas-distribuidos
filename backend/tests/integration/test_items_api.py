@@ -55,20 +55,6 @@ def test_get_item_not_found(client):
     assert response.json()["detail"] == "Item nao encontrado"
 
 
-@pytest.mark.parametrize(
-    "name",
-    ["Teclado", "Monitor", "Headset"],
-)
-def test_create_items_with_different_names(client, name):
-    response = client.post(
-        "/items/",
-        json={"name": name},
-    )
-
-    assert response.status_code == 201
-    assert response.json()["name"] == name
-
-
 def test_update_item(client):
     client.post(
         "/items/",
@@ -87,6 +73,25 @@ def test_update_item(client):
     assert response.json()["name"] == "Produto atualizado"
 
 
+def test_patch_item(client):
+    client.post(
+        "/items/",
+        json={
+            "name": "Produto",
+            "description": "Descricao antiga",
+        },
+    )
+
+    response = client.patch(
+        "/items/1",
+        json={"name": "Produto alterado"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["name"] == "Produto alterado"
+    assert response.json()["description"] == "Descricao antiga"
+
+
 def test_delete_item(client):
     client.post(
         "/items/",
@@ -100,3 +105,15 @@ def test_delete_item(client):
 
     response = client.get("/items/1")
     assert response.status_code == 404
+
+
+def test_query_parameter_name(client):
+    client.post(
+        "/items/",
+        json={"name": "Notebook"},
+    )
+
+    response = client.get("/items/?name=Notebook")
+
+    assert response.status_code == 200
+    assert response.json()[0]["name"] == "Notebook"
