@@ -1,63 +1,25 @@
-items_db = {}
-next_id = 1
+﻿from sqlalchemy.orm import Session
+from app.repositories.item_repository import ItemRepository
+from app.schemas.item import ItemCreate, ItemUpdate, ItemPatch
 
+class ItemService:
+    def __init__(self, db: Session):
+        self.repository = ItemRepository(db)
 
-def list_items():
-    return list(items_db.values())
+    def list_items(self):
+        return self.repository.get_all()
 
+    def get_item(self, item_id: int):
+        return self.repository.get_by_id(item_id)
 
-def get_item(item_id: int):
-    return items_db.get(item_id)
+    def create_item(self, item_data: ItemCreate):
+        return self.repository.create(item_data)
 
+    def update_item(self, item_id: int, item_data: ItemUpdate):
+        return self.repository.update(item_id, item_data)
 
-def create_item(name: str, description: str | None = None):
-    global next_id
+    def patch_item(self, item_id: int, item_data: ItemPatch):
+        return self.repository.patch(item_id, item_data)
 
-    item = {
-        "id": next_id,
-        "name": name,
-        "description": description,
-    }
-
-    items_db[next_id] = item
-    next_id += 1
-
-    return item
-
-
-def update_item(item_id: int, name: str, description: str | None = None):
-    if item_id not in items_db:
-        return None
-
-    items_db[item_id] = {
-        "id": item_id,
-        "name": name,
-        "description": description,
-    }
-
-    return items_db[item_id]
-
-
-def patch_item(
-    item_id: int,
-    name: str | None = None,
-    description: str | None = None,
-):
-    if item_id not in items_db:
-        return None
-
-    if name is not None:
-        items_db[item_id]["name"] = name
-
-    if description is not None:
-        items_db[item_id]["description"] = description
-
-    return items_db[item_id]
-
-
-def delete_item(item_id: int):
-    if item_id not in items_db:
-        return False
-
-    del items_db[item_id]
-    return True
+    def delete_item(self, item_id: int):
+        return self.repository.delete(item_id)
