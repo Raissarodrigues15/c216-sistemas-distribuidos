@@ -1,8 +1,14 @@
+```yaml
 name: CI Backend
 
 on:
   push:
+    branches:
+      - aulas
+      - pratica-4
   pull_request:
+    branches:
+      - aulas
 
 jobs:
   test:
@@ -22,8 +28,9 @@ jobs:
 
       - name: Install dependencies
         working-directory: backend
-        run: poetry install
+        run: poetry install --no-interaction --no-root
 
       - name: Run tests
         working-directory: backend
-        run: poetry run pytest
+        run: poetry run pytest -v
+```

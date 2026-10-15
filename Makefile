@@ -20,7 +20,7 @@ install:
 	cd $(BACKEND) && $(POETRY) install --no-root
 
 run:
-	cd $(BACKEND) && $(POETRY) run uvicorn main:app --host 0.0.0.0 --port 8000
+	cd $(BACKEND) && $(POETRY) run uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 test:
 	cd $(BACKEND) && $(POETRY) run pytest
@@ -42,3 +42,4 @@ clean:
 
 check:
 	cd $(BACKEND) && $(POETRY) check
+
