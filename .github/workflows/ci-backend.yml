@@ -1,4 +1,5 @@
-﻿name: CI Backend
+```yaml
+name: CI Backend
 
 on:
   push:
@@ -23,7 +24,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install Poetry
-        run: pip install poetry
+        run: pipx install poetry
 
       - name: Install dependencies
         working-directory: backend
@@ -32,3 +33,4 @@ jobs:
       - name: Run tests
         working-directory: backend
         run: poetry run pytest -v
+```
