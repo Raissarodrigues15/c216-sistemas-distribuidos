@@ -1,28 +1,27 @@
-"""create items table
 
-Revision ID: 5d36b53b4f39
-Revises: 
-Create Date: 2026-10-15 12:41:24.570674
-
-"""
-from typing import Sequence, Union
+"""Create items table."""
 
 from alembic import op
 import sqlalchemy as sa
 
-
-# revision identifiers, used by Alembic.
-revision: str = '5d36b53b4f39'
-down_revision: Union[str, Sequence[str], None] = None
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+revision = "5d36b53b4f39"
+down_revision = None
+branch_labels = None
+depends_on = None
 
 
 def upgrade() -> None:
-    """Upgrade schema."""
-    pass
+    op.create_table(
+        "items",
+        sa.Column("id", sa.Integer(), primary_key=True, nullable=False),
+        sa.Column("name", sa.String(), nullable=False),
+        sa.Column("description", sa.String(), nullable=True),
+    )
+    op.create_index("ix_items_id", "items", ["id"])
+    op.create_index("ix_items_name", "items", ["name"])
 
 
 def downgrade() -> None:
-    """Downgrade schema."""
-    pass
+    op.drop_index("ix_items_name", table_name="items")
+    op.drop_index("ix_items_id", table_name="items")
+    op.drop_table("items")
