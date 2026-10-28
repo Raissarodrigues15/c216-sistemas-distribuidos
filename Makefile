@@ -61,10 +61,13 @@ frontend-test-e2e:
 frontend-build:
 	cd $(FRONTEND) && npm run build
 
+
 check-all:
+	$(MAKE) check
 	cd $(BACKEND) && $(POETRY) run ruff check .
 	cd $(BACKEND) && $(POETRY) run pytest
 	$(MAKE) frontend-check
 	$(MAKE) frontend-test
 	$(MAKE) frontend-build
 	$(MAKE) frontend-test-e2e
+
