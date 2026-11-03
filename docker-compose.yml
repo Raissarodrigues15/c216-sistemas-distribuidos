@@ -28,5 +28,14 @@
       timeout: 5s
       retries: 5
 
+  frontend:
+    build:
+      context: ./frontend
+    container_name: c216-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:

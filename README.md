@@ -78,3 +78,34 @@ Durante a execução, o workflow:
 
 O workflow é executado nos eventos configurados de `push` e `pull_request`.
 
+
+## Executar o projeto completo com Docker
+
+O projeto utiliza Docker Compose para iniciar o PostgreSQL, o backend FastAPI e o frontend React.
+
+### Requisitos
+
+- Docker
+- Docker Compose
+
+### Iniciar os serviços
+
+Na raiz do projeto, execute:
+
+    docker compose up --build
+
+### Acessar a aplicação
+
+- Frontend: http://localhost:3000
+- API: http://localhost:8000
+- Documentação da API: http://localhost:8000/docs
+
+### Encerrar os serviços
+
+    docker compose down
+
+Para encerrar os serviços e apagar os dados persistidos do banco:
+
+    docker compose down -v
+
+Atenção: o comando com -v remove o volume do PostgreSQL e os dados armazenados nele.
