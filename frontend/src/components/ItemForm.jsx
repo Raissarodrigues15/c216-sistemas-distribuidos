@@ -1,68 +1,112 @@
 ﻿import { useState } from "react";
 import { validateItem, NAME_MAX_LENGTH } from "../validation";
 
-export default function ItemForm({ onAdd }) {
-	const [name, setName] = useState("");
-	const [description, setDescription] = useState("");
+export default function ItemForm({ initialItem, onSave, onCancel }) {
+	const [name, setName] = useState(initialItem?.name ?? "");
+	const [description, setDescription] = useState(
+		initialItem?.description ?? "",
+	);
 	const [errors, setErrors] = useState({});
+	const [saving, setSaving] = useState(false);
 
-	function handleSubmit(event) {
+	async function handleSubmit(event) {
 		event.preventDefault();
+
 		const result = validateItem({ name, description });
 		setErrors(result.errors);
 
-		if (Object.keys(result.errors).length > 0) {
-			return;
-		}
+		if (!result.isValid) return;
 
-		onAdd(result.values);
-		setName("");
-		setDescription("");
+		setSaving(true);
+
+		try {
+			const saved = await onSave(result.values);
+
+			if (saved) {
+				setName("");
+				setDescription("");
+				setErrors({});
+			}
+		} finally {
+			setSaving(false);
+		}
 	}
 
 	return (
-		<form onSubmit={handleSubmit} className="space-y-4">
+		<form
+			onSubmit={handleSubmit}
+			className="space-y-4 rounded-xl bg-white p-6 shadow"
+		>
+			<h2 className="text-xl font-semibold text-slate-800">
+				{initialItem ? "Editar item" : "Cadastrar item"}
+			</h2>
+
 			<div>
-				<label htmlFor="item-name" className="mb-1 block font-medium">
+				<label htmlFor="name" className="mb-1 block font-medium text-slate-700">
 					Nome
 				</label>
 				<input
-					id="item-name"
-					name="name"
+					id="name"
 					value={name}
 					onChange={(event) => setName(event.target.value)}
 					maxLength={NAME_MAX_LENGTH}
+					className="w-full rounded-lg border border-slate-300 px-3 py-2"
 					aria-invalid={Boolean(errors.name)}
 					aria-describedby={errors.name ? "name-error" : undefined}
-					className="w-full rounded border border-gray-300 px-3 py-2"
 				/>
 				{errors.name && (
-					<p id="name-error" role="alert" className="mt-1 text-sm text-red-700">
+					<p id="name-error" role="alert" className="mt-1 text-sm text-red-600">
 						{errors.name}
 					</p>
 				)}
 			</div>
 
 			<div>
-				<label htmlFor="item-description" className="mb-1 block font-medium">
+				<label
+					htmlFor="description"
+					className="mb-1 block font-medium text-slate-700"
+				>
 					Descrição
 				</label>
 				<textarea
-					id="item-description"
-					name="description"
+					id="description"
 					value={description}
 					onChange={(event) => setDescription(event.target.value)}
-					className="w-full rounded border border-gray-300 px-3 py-2"
 					rows={3}
+					className="w-full rounded-lg border border-slate-300 px-3 py-2"
+					aria-invalid={Boolean(errors.description)}
 				/>
+				{errors.description && (
+					<p role="alert" className="mt-1 text-sm text-red-600">
+						{errors.description}
+					</p>
+				)}
 			</div>
 
-			<button
-				type="submit"
-				className="rounded bg-blue-700 px-4 py-2 font-medium text-white hover:bg-blue-800"
-			>
-				Adicionar item
-			</button>
+			<div className="flex gap-3">
+				<button
+					type="submit"
+					disabled={saving}
+					className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+				>
+					{saving
+						? "Salvando..."
+						: initialItem
+							? "Salvar alterações"
+							: "Cadastrar"}
+				</button>
+
+				{initialItem && (
+					<button
+						type="button"
+						onClick={onCancel}
+						disabled={saving}
+						className="rounded-lg bg-slate-200 px-4 py-2 font-medium text-slate-700"
+					>
+						Cancelar
+					</button>
+				)}
+			</div>
 		</form>
 	);
 }

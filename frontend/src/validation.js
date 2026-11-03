@@ -5,6 +5,7 @@ export function validateItem({ name, description }) {
 		name: name.trim(),
 		description: description.trim(),
 	};
+
 	const errors = {};
 
 	if (!values.name) {
@@ -13,5 +14,9 @@ export function validateItem({ name, description }) {
 		errors.name = `O nome deve ter no máximo ${NAME_MAX_LENGTH} caracteres.`;
 	}
 
-	return { errors, values };
+	return {
+		isValid: Object.keys(errors).length === 0,
+		errors,
+		values,
+	};
 }
