@@ -1,5 +1,4 @@
-```yaml
-name: CI Backend
+﻿name: CI Backend
 
 on:
   push:
@@ -33,4 +32,3 @@ jobs:
       - name: Run tests
         working-directory: backend
         run: poetry run pytest -v
-```
